@@ -5,7 +5,6 @@ from prettytable import PrettyTable
 
 
 
-
 class Formula:
     def __init__(self,formula, xVar):
         self.formula = formula
@@ -31,6 +30,9 @@ class Formula:
         self.x = xVar
         self.ALLOWED_NAMES.update({'x':self.x})
         return eval(self.code, {"__builtins__": {}}, self.ALLOWED_NAMES)
+
+    def __repr__(self):
+        return (f'{self.__class__.__name__}('f'{self.formula}, x = {self.x})')
 
 
 def SimpsonRule(formula, n, a,b, precision)->None:
@@ -58,7 +60,6 @@ def SimpsonRule(formula, n, a,b, precision)->None:
     sum0 = round(sum(y0),precision)
     sum1 = round(sum(y1),precision)
     sum2 = round(sum(y2),precision)
-
     table = PrettyTable(['i', 'Xi','y0','y1','y2'])
 
     y0list = 0
@@ -67,16 +68,17 @@ def SimpsonRule(formula, n, a,b, precision)->None:
     for i in range((2*n)+1):
         if i == 0 or i == 2 * n:
             table.add_row([i,xList[i],y0[y0list],' ',' '])
-            y0list = y0list + 1
+            y0list += 1
 
         if i % 2 != 0 and i != 0 and i != 2*n: 
             table.add_row([i,xList[i],' ',y1[y1list],' '])
-            y1list = y1list + 1
+            y1list += 1
         
         if i % 2 == 0 and i != 2*n and i > 0:
             table.add_row([i,xList[i],' ',' ',y2[y2list]])
-            y2list = y2list + 1
-            
+            y2list += 1
+
+    table.add_row(['--','----','----','----','----'])        
     table.add_row(['Σx','=',sum0,sum1,sum2])
     print(table)
     print("Σ0 = ", sum0," | Σ1 = ", sum1," | Σ2 = ", sum2 )
@@ -111,7 +113,7 @@ def main():
                 break
             else:
                 print("Precision not good", precision)
-        n = n * 2
+        n *= 2
         iteration = iteration + 1 
 
 

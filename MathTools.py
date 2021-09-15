@@ -1,5 +1,4 @@
 import math
-import numpy
 import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
@@ -35,7 +34,7 @@ class Formula:
         return (f'{self.__class__.__name__}('f'{self.formula}, x = {self.x})')
 
 
-def SimpsonRule(formula, n, a,b,  )->None:
+def SimpsonSolver(formula, n, a,b,precision):
     if n < 1:
         print("Wrong Arguments, aborted!")
         return
@@ -75,8 +74,7 @@ def SimpsonRule(formula, n, a,b,  )->None:
     
     return aproxAnswer
 
-
-def main():
+def SimpsonCalculator()->None:
     answer =[]
     epsilon  = 0.0001
     n = 1
@@ -84,7 +82,7 @@ def main():
     b = 0.0
     formula = ""
     print("Solve Integrals with Simpson rule")
-    formula = input("Type formula:\t")
+    formula = input("Type formula in python syntax:\t")
     n = int(input(" Type value for n:\t"))
     epsilon = float(input("Type epsilon Value like 0.001:\t"))
     a = float(input("Type value for a:\t"))
@@ -93,7 +91,7 @@ def main():
     iteration = 0
     while n <= 100:
         print("\nn = ",n)
-        answer.append(SimpsonRule(formula,n,a,b,4))
+        answer.append(SimpsonSolver(formula,n,a,b,4))
         if iteration >= 1:
             precision = round(abs(answer[iteration]-answer[iteration-1]),5)
             if precision < epsilon:
@@ -103,6 +101,30 @@ def main():
                 print("Precision not good", precision)
         n *= 2
         iteration = iteration + 1 
+
+def NewtonCalculator():
+    fString = input("Type f in python syntax:\t")
+    x = float(input("Type start value for x:\t"))
+    n = int(input("Type value for n:\t"))
+    
+    f = Formula(fString, x)
+    table = PrettyTable(['i', 'Xi'])
+    for i in range(n):
+        x = f.Solve(x)
+        table.add_row(([i,x,]))
+    print(table)
+    return
+
+
+def main():
+    print("Simpson Calculator\t 1")
+    print("Newtons Method\t 2")
+    choice = int(input())
+
+    if choice == 1:
+        SimpsonCalculator()
+    if choice == 2:
+        NewtonCalculator()
 
         
 if __name__ == "__main__":

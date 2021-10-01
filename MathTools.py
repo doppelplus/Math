@@ -1,7 +1,8 @@
 import math
 import matplotlib.pyplot as plt
 from prettytable import PrettyTable
-
+from sympy import fourier_series, pi
+from sympy.abc import x
 
 
 class Formula:
@@ -115,16 +116,43 @@ def NewtonCalculator():
     print(table)
     return
 
+def BestFitLine():
+    n = int(input("Type n: "))
+    Xi = []
+    Yi = []
+    XiSq = []
+    XiYi = []
+    #Data Input and generation
+    for i in range(n):
+        Xi.append(float(input(f'Type x{i}: ')))
+    for i in range(n):
+        Yi.append(float(input(f'Type y{i}: ')))
+    for i in range(n):
+        XiSq.append(round(Xi[i] ** 2))
+    for i in range(n):
+        XiYi.append(round(Xi[i] * Yi[i]))
+    
+    #Data Output with sums
+    print(f'Σxi = {Xi} = {round(sum(Xi),4)}')
+    print(f'Σyi = {Yi} = {round(sum(Yi),4)}')
+    print(f'Σxi² = {XiSq} = {round(sum(XiSq),4)}')
+    print(f'Σxiyi = {XiYi} = {round(sum(XiYi),4)}')
+    print(f'\n {round(sum(XiSq),4)}a + {round(sum(Xi))}b = {round(sum(XiYi),4)}')
+    print(f'\n {round(sum(Xi),4)}a + {n}b = {round(sum(Yi),4)}')
+    return
 
 def main():
     print("Simpson Calculator\t 1")
     print("Newtons Method\t 2")
+    print("Best fit line\t 3")
     choice = int(input())
 
     if choice == 1:
         SimpsonCalculator()
     if choice == 2:
         NewtonCalculator()
+    if choice == 3:
+        BestFitLine() 
 
         
 if __name__ == "__main__":

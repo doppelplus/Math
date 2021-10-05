@@ -1,9 +1,5 @@
 import math
-import matplotlib.pyplot as plt
 from prettytable import PrettyTable
-from sympy import fourier_series, pi
-from sympy.abc import x
-
 
 class Formula:
     def __init__(self,formula, xVar):

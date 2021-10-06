@@ -141,27 +141,26 @@ def BestFitLine()->None:
 def HornerMethod():
     n = int(input("Type n: ")) +1
     divisor = 1
-    colList = []
-    polyList = [[None for _ in range(n)],[None for _ in range(n)],[None for _ in range(n)],[None for _ in range(n)]]
-    for i in range(n ):
-        colList.append('x' + str(i))
+    colList = ['x' + str(i) for i in range(n)]
     colList.reverse()
+   
+    polyList = [[None for _ in range(n)],['+' for _ in range(n)],[None for _ in range(n)],['---' for _ in range(n)],[None for _ in range(n)]]
+    
     table = PrettyTable(colList)
     for i in range(n):
-        polyList[0] [i] = (float(input("Type highest order polygon part:\t")))
-        polyList[1][i] = '+'
+        polyList[0] [i] = (float(input(f'Type x^{i}  ')))
     divisor = float(input("Type divisor:\t"))
     polyList[2][0] = 0
 
     for i in range(n):
-        polyList[3][i] = polyList[0][i] + polyList[2][i]
+        polyList[4][i] = polyList[0][i] + polyList[2][i]
         if i < n - 1:
-            polyList[2][i+1] = polyList[3][i] * divisor
+            polyList[2][i+1] = polyList[4][i] * divisor
 
-    for i in range(4):
+    for i in range(n+1):
         table.add_row(polyList[i])
     print(table)
-    
+
     return
 
 def main():
@@ -171,6 +170,16 @@ def main():
     print("Horner Method\t 4")
     choice = int(input())
 
+    if choice == 1:
+        SimpsonCalculator()
+    if choice == 2:
+        NewtonCalculator()
+    if choice == 3:
+        BestFitLine()
+    if choice == 4:
+        HornerMethod()
+"""
+# only for python 3.10
     match choice:
         case 1:
             SimpsonCalculator()
@@ -182,6 +191,6 @@ def main():
             HornerMethod()
         case _:
             print("Input Error")
-        
+"""        
 if __name__ == "__main__":
     main()

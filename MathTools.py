@@ -139,11 +139,11 @@ def BestFitLine()->None:
     return
 
 def HornerMethod():
-    n = int(input("Type n: "))
+    n = int(input("Type n: ")) +1
     divisor = 1
     colList = []
     polyList = [[None for _ in range(n)],[None for _ in range(n)],[None for _ in range(n)],[None for _ in range(n)]]
-    for i in range(n):
+    for i in range(n ):
         colList.append('x' + str(i))
     colList.reverse()
     table = PrettyTable(colList)

@@ -1,4 +1,5 @@
 import math
+from re import M
 from prettytable import PrettyTable
 
 class Formula:
@@ -99,7 +100,7 @@ def SimpsonCalculator()->None:
         n *= 2
         iteration = iteration + 1 
 
-def NewtonCalculator():
+def NewtonCalculator()->None:
     fString = input("Type f in python syntax:\t")
     x = float(input("Type start value for x:\t"))
     n = int(input("Type value for n:\t"))
@@ -112,7 +113,7 @@ def NewtonCalculator():
     print(table)
     return
 
-def BestFitLine():
+def BestFitLine()->None:
     n = int(input("Type n: "))
     Xi = []
     Yi = []
@@ -137,19 +138,50 @@ def BestFitLine():
     print(f'\n {round(sum(Xi),4)}a + {n}b = {round(sum(Yi),4)}')
     return
 
+def HornerMethod():
+    n = int(input("Type n: "))
+    divisor = 1
+    colList = []
+    polyList = [[None for _ in range(n)],[None for _ in range(n)],[None for _ in range(n)],[None for _ in range(n)]]
+    for i in range(n):
+        colList.append('x' + str(i))
+    colList.reverse()
+    table = PrettyTable(colList)
+    for i in range(n):
+        polyList[0] [i] = (float(input("Type highest order polygon part:\t")))
+        polyList[1][i] = '+'
+    divisor = float(input("Type divisor:\t"))
+    polyList[2][0] = 0
+
+    for i in range(n):
+        polyList[3][i] = polyList[0][i] + polyList[2][i]
+        if i < n - 1:
+            polyList[2][i+1] = polyList[3][i] * divisor
+
+    for i in range(4):
+        table.add_row(polyList[i])
+    print(table)
+    
+    return
+
 def main():
     print("Simpson Calculator\t 1")
     print("Newtons Method\t 2")
     print("Best fit line\t 3")
+    print("Horner Method\t 4")
     choice = int(input())
 
-    if choice == 1:
-        SimpsonCalculator()
-    if choice == 2:
-        NewtonCalculator()
-    if choice == 3:
-        BestFitLine() 
-
+    match choice:
+        case 1:
+            SimpsonCalculator()
+        case 2:
+            NewtonCalculator()
+        case 3:
+            BestFitLine()
+        case 4:
+            HornerMethod()
+        case _:
+            print("Input Error")
         
 if __name__ == "__main__":
     main()

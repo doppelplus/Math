@@ -73,12 +73,7 @@ def SimpsonSolver(formula, n, a,b,precision):
     return aproxAnswer
 
 def SimpsonCalculator()->None:
-    answer =[]
-    epsilon  = 0.0001
-    n = 1
-    a = 0.0
-    b = 0.0
-    formula = ""
+    answer = []
     print("Solve Integrals with Simpson rule")
     formula = input("Type formula in python syntax:\t")
     n = int(input(" Type value for n:\t"))
@@ -139,7 +134,7 @@ def BestFitLine()->None:
     return
 
 def HornerMethod():
-    n = int(input("Type n: ")) +1
+    n = int(input("Type n: ")) + 1
     divisor = 1
     colList = ['x' + str(i) for i in range(n)]
     colList.reverse()
@@ -148,7 +143,7 @@ def HornerMethod():
     
     table = PrettyTable(colList)
     for i in range(n):
-        polyList[0] [i] = (float(input(f'Type x^{i}  ')))
+        polyList[0] [i] = (float(input(f'Type x^{n - 1 - i}  ')))
     divisor = float(input("Type divisor:\t"))
     polyList[2][0] = 0
 
@@ -157,7 +152,7 @@ def HornerMethod():
         if i < n - 1:
             polyList[2][i+1] = polyList[4][i] * divisor
 
-    for i in range(n+1):
+    for i in range(n + 1):
         table.add_row(polyList[i])
     print(table)
 

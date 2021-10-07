@@ -152,7 +152,7 @@ def HornerMethod():
         if i < n - 1:
             polyList[2][i+1] = polyList[4][i] * divisor
 
-    for i in range(n + 1):
+    for i in range(5):
         table.add_row(polyList[i])
     print(table)
 

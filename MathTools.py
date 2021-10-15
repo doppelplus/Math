@@ -158,21 +158,31 @@ def HornerMethod():
 
     return
 
-def main():
-    print("Simpson Calculator\t 1")
+
+def Print_Menu()->None:
+    print("Simpson Method\t 1")
     print("Newtons Method\t 2")
     print("Best fit line\t 3")
     print("Horner Method\t 4")
-    choice = int(input())
+    print("Press 'c' to close")
 
-    if choice == 1:
-        SimpsonCalculator()
-    if choice == 2:
-        NewtonCalculator()
-    if choice == 3:
-        BestFitLine()
-    if choice == 4:
-        HornerMethod()
+
+def main():
+
+    choice = 'u'
+    while choice != 'c':
+        Print_Menu()
+        choice = input()
+        
+        if choice == '1':
+            SimpsonCalculator()
+        if choice == '2':
+            NewtonCalculator()
+        if choice == '3':
+            BestFitLine()
+        if choice == '4':
+            HornerMethod()
+    return
 """
 # only for python 3.10
     match choice:

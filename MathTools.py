@@ -3,7 +3,7 @@ from re import M
 from prettytable import PrettyTable
 
 class Formula:
-    def __init__(self,formula, xVar):
+    def __init__(self,formula, xVar = 0.0):
         self.formula = formula
         self.x = xVar
         self.ALLOWED_NAMES = {k: v for k, v in math.__dict__.items() if not k.startswith("__")}
@@ -157,13 +157,37 @@ def HornerMethod():
     print(table)
 
     return
-
+def BisectionMethod()->None:
+    a = float(input("Type a: \t"))
+    b = float(input("Type b: \t"))
+    epsilon = float(input("Type epsilon: \t"))
+    formula = Formula(input("Type Formula: \t"))
+    if formula.Solve(a) * formula.Solve(b) >= 0:
+        print("Value for a and b wrong ")
+        return
+    while True:
+        xm = (a+b)/2
+        answer = formula.Solve(xm)
+        pm = 0.0
+        if answer == 0:
+            print(f'Exact Zero point is {xm}')
+            break 
+        elif b - a < epsilon:
+            print(f'Approximate Zero point is {xm}')
+            break
+        else: 
+            pm = formula.Solve(xm) * formula.Solve(a)
+            if pm > 0:
+                a = xm
+            elif pm < 0:
+                b = xm
 
 def Print_Menu()->None:
     print("Simpson Method\t 1")
     print("Newtons Method\t 2")
     print("Best fit line\t 3")
     print("Horner Method\t 4")
+    print("Biscetive Method\t 5")
     print("Press 'c' to close")
 
 
@@ -182,6 +206,8 @@ def main():
             BestFitLine()
         if choice == '4':
             HornerMethod()
+        if choice == '5':
+            BisectionMethod()
     return
 """
 # only for python 3.10

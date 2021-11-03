@@ -1,37 +1,33 @@
 import math
-import sympy
+import sympy as sp
 from prettytable import PrettyTable
 
 
-class Formula:
-    def __init__(self, formula, xVar=0.0):
-        self.formula = formula
-        self.x = xVar
+class Equation:
+    def __init__(self, equation):
         self.ALLOWED_NAMES = {k: v for k, v in math.__dict__.items() if not k.startswith("__")}
-        self.ALLOWED_NAMES.update({'x': self.x})
-        self.code = self.Evaluate(formula)
-
-    def Evaluate(self, expression):
-        evalCode = compile(expression, "<string>", "eval")
-
-        # Validate allowed names
-
-        for name in evalCode.co_names:
-
+        self.ALLOWED_NAMES.update({'x': 'x'})
+        self.ALLOWED_NAMES.update({'x': 'y'})
+        self.ALLOWED_NAMES.update({'x': 'z'})
+        self.x = sp.symbols('x')
+        self.y = sp.symbols('y')
+        self.z = sp.symbols('z')
+        # Security: check for malicious string
+        evaluate = compile(equation, "<string>", "eval")
+        for name in evaluate.co_names:
             if name not in self.ALLOWED_NAMES:
                 raise NameError(f"The use of '{name}' is not allowed")
-        return evalCode
+        # All good sympify can be done
+        self.eq = sp.sympify(equation)
 
-    def Solve(self, xVar) -> float:
-        self.x = xVar
-        self.ALLOWED_NAMES.update({'x': self.x})
-        return eval(self.code, {"__builtins__": {}}, self.ALLOWED_NAMES)
+    def solve_for(self, var, value) -> float:
+        return self.eq.subs(var, value)
 
     def __repr__(self):
-        return (f'{self.__class__.__name__}('f'{self.formula}, x = {self.x})')
+        return f'{self.__class__.__name__}('f'{self.eq})'
 
 
-def simpson_solver(formula, n, a, b, precision):
+def simpson_solver(equation, n, a, b, precision):
     if n < 1:
         print("Wrong Arguments, aborted!")
         return
@@ -42,9 +38,9 @@ def simpson_solver(formula, n, a, b, precision):
     y2 = 0.0
     table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
 
-    formula = Formula(formula, x)
+    formula = Equation(equation)
     for i in range((2 * n) + 1):
-        answer = formula.Solve(x)
+        answer = formula.solve_for('x', x)
         if i == 0 or i == 2 * n:
             y0 += answer
             table.add_row([i, x, answer, ' ', ' '])
@@ -66,16 +62,16 @@ def simpson_solver(formula, n, a, b, precision):
     table.add_row(['Σx', '=', y0, y1, y2])
     print(table)
     print("Σ0 = ", y0, " | Σ1 = ", y1, " | Σ2 = ", y2)
-    aproxAnswer = (h / 3) * (y0 + (4 * y1) + (2 * y2))
-    print("S", (2 * n), " = (", h, '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(aproxAnswer, precision))
+    aprox_answer = (h / 3) * (y0 + (4 * y1) + (2 * y2))
+    print("S", (2 * n), " = (", h, '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(aprox_answer, precision))
 
-    return aproxAnswer
+    return aprox_answer
 
 
 def simpson_method() -> None:
     answer = []
     print("Solve Integrals with Simpson rule")
-    formula = input("Type formula in python syntax:\t")
+    formula = input("Type equation in python syntax:\t")
     n = int(input(" Type value for n:\t"))
     epsilon = float(input("Type epsilon Value like 0.001:\t"))
     a = float(input("Type value for a:\t"))
@@ -97,14 +93,14 @@ def simpson_method() -> None:
 
 
 def newton_method() -> None:
-    fstring = input("Type f in python syntax:\t")
+
     x = float(input("Type start value for x:\t"))
     n = int(input("Type value for n:\t"))
+    f = Equation(input("Type f in python syntax:\t"))
 
-    f = Formula(fstring, x)
     table = PrettyTable(['i', 'Xi'])
     for i in range(n):
-        x = f.Solve(x)
+        x = f.solve_for('x', x)
         table.add_row(([i, x, ]))
     print(table)
     return
@@ -167,13 +163,13 @@ def bisection_method() -> None:
     a = float(input("Type a: \t"))
     b = float(input("Type b: \t"))
     epsilon = float(input("Type epsilon: \t"))
-    formula = Formula(input("Type Formula: \t"))
-    if formula.Solve(a) * formula.Solve(b) >= 0:
+    formula = Equation(input("Type equation: \t"))
+    if formula.solve_for(a) * formula.solve_for(b) >= 0:
         print("Value for a and b wrong ")
         return
     while True:
         xm = (a + b) / 2
-        answer = formula.Solve(xm)
+        answer = formula.solve_for('x',xm)
         pm = 0.0
         if answer == 0:
             print(f'Exact Zero point is {xm}')
@@ -182,7 +178,7 @@ def bisection_method() -> None:
             print(f'Approximate Zero point is {xm}')
             break
         else:
-            pm = formula.Solve(xm) * formula.Solve(a)
+            pm = formula.solve_for('x',xm) * formula.solve_for(a)
             if pm > 0:
                 a = xm
             elif pm < 0:
@@ -190,7 +186,7 @@ def bisection_method() -> None:
 
 
 def jacobi_method() -> None:
-    sympy.init_printing(pretty_print=True)
+    sp.init_printing(pretty_print=True)
     n = int(input("Type n (Matrix is n x n)\t"))
     if n <= 1:
         print("Wrong Input, aborted")
@@ -200,8 +196,8 @@ def jacobi_method() -> None:
         for i in range(n):
             print("roiroi")
             raw_matrix[j][i] = float(input(f'Type A{j}{i}\t'))
-    m = sympy.Matrix(raw_matrix)
-    sympy.pretty_print(m)
+    m = sp.Matrix(raw_matrix)
+    sp.pretty_print(m)
     return
 
 

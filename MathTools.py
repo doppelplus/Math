@@ -27,10 +27,18 @@ class Equation:
         return f'{self.__class__.__name__}('f'{self.eq})'
 
 
-def simpson_solver(equation, n, a, b, precision):
+def simpson_method() -> None:
+    answer = []
+    print("Solve Integrals with Simpson rule")
+    equation_string = input("Type equation in python syntax:\t")
+    n = int(input("Type value for n:\t"))
     if n < 1:
         print("Wrong Arguments, aborted!")
         return
+    epsilon = float(input("Type epsilon Value like 0.001:\t"))
+    rv = int(input("Type precision value like 5:\t"))
+    a = float(input("Type value for a:\t"))
+    b = float(input("Type value for b:\t"))
     h = float((b - a) / (2 * n))
     x = a
     y0 = 0.0
@@ -38,51 +46,35 @@ def simpson_solver(equation, n, a, b, precision):
     y2 = 0.0
     table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
 
-    formula = Equation(equation)
-    for i in range((2 * n) + 1):
-        answer = formula.solve_for('x', x)
-        if i == 0 or i == 2 * n:
-            y0 += answer
-            table.add_row([i, x, answer, ' ', ' '])
-
-        if i % 2 != 0 and i != 0 and i != 2 * n:
-            y1 += answer
-            table.add_row([i, x, ' ', answer, ' '])
-
-        if i % 2 == 0 and i != 2 * n and i > 0:
-            y2 += answer
-            table.add_row([i, x, ' ', ' ', answer])
-
-        x += h
-    y0 = round(y0, precision)
-    y1 = round(y1, precision)
-    y2 = round(y2, precision)
-
-    table.add_row(['--', '----', '----', '----', '----'])
-    table.add_row(['Σx', '=', y0, y1, y2])
-    print(table)
-    print("Σ0 = ", y0, " | Σ1 = ", y1, " | Σ2 = ", y2)
-    aprox_answer = (h / 3) * (y0 + (4 * y1) + (2 * y2))
-    print("S", (2 * n), " = (", h, '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(aprox_answer, precision))
-
-    return aprox_answer
-
-
-def simpson_method() -> None:
-    answer = []
-    print("Solve Integrals with Simpson rule")
-    formula = input("Type equation in python syntax:\t")
-    n = int(input(" Type value for n:\t"))
-    epsilon = float(input("Type epsilon Value like 0.001:\t"))
-    a = float(input("Type value for a:\t"))
-    b = float(input("Type value for b:\t"))
-
     iteration = 0
     while n <= 100:
         print("\nn = ", n)
-        answer.append(simpson_solver(formula, n, a, b, 4))
+        equation = Equation(equation_string)
+        for i in range((2 * n) + 1):
+            ans = equation.solve_for('x', x)
+            ans_str = str(round(ans, rv))
+            if i == 0 or i == 2 * n:
+                y0 += ans
+                table.add_row([i, x, ans_str, ' ', ' '])
+
+            if i % 2 != 0 and i != 0 and i != 2 * n:
+                y1 += ans
+                table.add_row([i, x, ' ', ans_str, ' '])
+
+            if i % 2 == 0 and i != 2 * n and i > 0:
+                y2 += ans
+                table.add_row([i, x, ' ', ' ', ans_str])
+            x += h
+
+        table.add_row(['--', '----', '----', '----', '----'])
+        table.add_row(['Σx', '=', y0, y1, y2])
+        print(table)
+        print("Σ0 = ", str(round(y0, rv)), " | Σ1 = ", str(round(y1, rv)), " | Σ2 = ", str(round(y2, rv)))
+        approx_answer = (h / 3) * (y0 + (4 * y1) + (2 * y2))
+        print("S", (2 * n), " = (", h, '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(approx_answer, rv))
+        answer.append(approx_answer)
         if iteration >= 1:
-            precision = round(abs(answer[iteration] - answer[iteration - 1]), 5)
+            precision = round(abs(answer[iteration] - answer[iteration - 1]), rv)
             if precision < epsilon:
                 print("Precision is good enough", precision)
                 break
@@ -93,7 +85,6 @@ def simpson_method() -> None:
 
 
 def newton_method() -> None:
-
     x = float(input("Type start value for x:\t"))
     n = int(input("Type value for n:\t"))
     f = Equation(input("Type f in python syntax:\t"))
@@ -123,23 +114,22 @@ def best_fit_line() -> None:
         xi_yi.append(round(xi[i] * yi[i]))
 
     # Data Output with sums
-    print(f'Σxi = {xi} = {round(sum(xi), 4)}')
-    print(f'Σyi = {yi} = {round(sum(yi), 4)}')
-    print(f'Σxi² = {xi_sq} = {round(sum(xi_sq), 4)}')
-    print(f'Σxiyi = {xi_yi} = {round(sum(xi_yi), 4)}')
-    print(f'\n {round(sum(xi_sq), 4)}a + {round(sum(xi))}b = {round(sum(xi_yi), 4)}')
-    print(f'\n {round(sum(xi), 4)}a + {n}b = {round(sum(yi), 4)}')
+    print(f'Σxi = {xi} = {str(round(sum(xi), 4))}')
+    print(f'Σyi = {yi} = {str(round(sum(yi), 4))}')
+    print(f'Σxi² = {xi_sq} = {str(round(sum(xi_sq), 4))}')
+    print(f'Σxiyi = {xi_yi} = {str(round(sum(xi_yi), 4))}')
+    print(f'\n {str(round(sum(xi_sq), 4))}a + {str(round(sum(xi),4))}b = {str(round(sum(xi_yi), 4))}')
+    print(f'\n {str(round(sum(xi), 4))}a + {n}b = {str(round(sum(yi), 4))}')
     return
 
 
 def horner_method():
     n = int(input("Type n: ")) + 1
-    divisor = 1
     col_list = ['x' + str(i) for i in range(n)]
     col_list.reverse()
 
     poly_list = [[None for _ in range(n)], ['+' for _ in range(n)], [None for _ in range(n)], ['---' for _ in range(n)],
-                [None for _ in range(n)]]
+                 [None for _ in range(n)]]
 
     table = PrettyTable(col_list)
     for i in range(n):
@@ -169,8 +159,7 @@ def bisection_method() -> None:
         return
     while True:
         xm = (a + b) / 2
-        answer = formula.solve_for('x',xm)
-        pm = 0.0
+        answer = formula.solve_for('x', xm)
         if answer == 0:
             print(f'Exact Zero point is {xm}')
             break
@@ -178,7 +167,7 @@ def bisection_method() -> None:
             print(f'Approximate Zero point is {xm}')
             break
         else:
-            pm = formula.solve_for('x',xm) * formula.solve_for(a)
+            pm = formula.solve_for('x', xm) * formula.solve_for(a)
             if pm > 0:
                 a = xm
             elif pm < 0:
@@ -191,7 +180,7 @@ def jacobi_method() -> None:
     if n <= 1:
         print("Wrong Input, aborted")
         return
-    raw_matrix = [[0.0 for x in range(n)] for y in range(n)]
+    raw_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
     for j in range(n):
         for i in range(n):
             print("roiroi")
@@ -216,7 +205,7 @@ def print_menu() -> None:
     print("Press 'c' to close")
 
 
-def main():
+def main() -> None:
     choice = 'u'
     while choice != 'c':
         print_menu()

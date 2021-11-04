@@ -41,13 +41,13 @@ def simpson_method() -> None:
     b = float(input("Type value for b:\t"))
     h = float((b - a) / (2 * n))
     x = a
-    y0 = 0.0
-    y1 = 0.0
-    y2 = 0.0
-    table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
 
     iteration = 0
     while n <= 100:
+        y0 = 0.0
+        y1 = 0.0
+        y2 = 0.0
+        table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
         print("\nn = ", n)
         for i in range((2 * n) + 1):
             ans = round(float(equation.solve_for('x', x)), rv)
@@ -67,6 +67,7 @@ def simpson_method() -> None:
         table.add_row(['--', '----', '----', '----', '----'])
         table.add_row(['Σx', '=', round(float(y0), rv), round(float(y1), rv), round(float(y2), rv)])
         print(table)
+        table.clear()
         print("Σ0 = ", round(float(y0), rv), " | Σ1 = ", round(float(y1), rv), " | Σ2 = ", round(float(y2), rv))
         approx_ans = (h / 3) * (y0 + (4 * y1) + (2 * y2))
         print("S", (2 * n), " = (", round(float(h), rv), '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(float(approx_ans), rv))

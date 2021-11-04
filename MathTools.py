@@ -30,7 +30,7 @@ class Equation:
 def simpson_method() -> None:
     answer = []
     print("Solve Integrals with Simpson rule")
-    equation_string = input("Type equation in python syntax:\t")
+    equation = Equation(input("Type equation in python syntax:\t"))
     n = int(input("Type value for n:\t"))
     if n < 1:
         print("Wrong Arguments, aborted!")
@@ -49,12 +49,11 @@ def simpson_method() -> None:
     iteration = 0
     while n <= 100:
         print("\nn = ", n)
-        equation = Equation(equation_string)
         for i in range((2 * n) + 1):
             ans = round(float(equation.solve_for('x', x)), rv)
             if i == 0 or i == 2 * n:
                 y0 += ans
-                table.add_row([i, x, ans, ' ', ' '])
+                table.add_row([i, round(float(x), rv), ans, ' ', ' '])
 
             if i % 2 != 0 and i != 0 and i != 2 * n:
                 y1 += ans

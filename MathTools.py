@@ -51,30 +51,29 @@ def simpson_method() -> None:
         print("\nn = ", n)
         equation = Equation(equation_string)
         for i in range((2 * n) + 1):
-            ans = equation.solve_for('x', x)
-            ans_str = str(round(ans, rv))
+            ans = round(float(equation.solve_for('x', x)), rv)
             if i == 0 or i == 2 * n:
                 y0 += ans
-                table.add_row([i, x, ans_str, ' ', ' '])
+                table.add_row([i, x, ans, ' ', ' '])
 
             if i % 2 != 0 and i != 0 and i != 2 * n:
                 y1 += ans
-                table.add_row([i, x, ' ', ans_str, ' '])
+                table.add_row([i, x, ' ', ans, ' '])
 
             if i % 2 == 0 and i != 2 * n and i > 0:
                 y2 += ans
-                table.add_row([i, x, ' ', ' ', ans_str])
+                table.add_row([i, x, ' ', ' ', ans])
             x += h
 
         table.add_row(['--', '----', '----', '----', '----'])
-        table.add_row(['Σx', '=', y0, y1, y2])
+        table.add_row(['Σx', '=', round(float(y0), rv), round(float(y1), rv), round(float(y2), rv)])
         print(table)
-        print("Σ0 = ", str(round(y0, rv)), " | Σ1 = ", str(round(y1, rv)), " | Σ2 = ", str(round(y2, rv)))
-        approx_answer = (h / 3) * (y0 + (4 * y1) + (2 * y2))
-        print("S", (2 * n), " = (", h, '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(approx_answer, rv))
-        answer.append(approx_answer)
+        print("Σ0 = ", round(float(y0), rv), " | Σ1 = ", round(float(y1), rv), " | Σ2 = ", round(float(y2), rv))
+        approx_ans = (h / 3) * (y0 + (4 * y1) + (2 * y2))
+        print("S", (2 * n), " = (", round(float(h), rv), '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(float(approx_ans), rv))
+        answer.append(approx_ans)
         if iteration >= 1:
-            precision = round(abs(answer[iteration] - answer[iteration - 1]), rv)
+            precision = round(float(abs(answer[iteration] - answer[iteration - 1])), rv)
             if precision < epsilon:
                 print("Precision is good enough", precision)
                 break
@@ -114,12 +113,12 @@ def best_fit_line() -> None:
         xi_yi.append(round(xi[i] * yi[i]))
 
     # Data Output with sums
-    print(f'Σxi = {xi} = {str(round(sum(xi), 4))}')
-    print(f'Σyi = {yi} = {str(round(sum(yi), 4))}')
-    print(f'Σxi² = {xi_sq} = {str(round(sum(xi_sq), 4))}')
-    print(f'Σxiyi = {xi_yi} = {str(round(sum(xi_yi), 4))}')
-    print(f'\n {str(round(sum(xi_sq), 4))}a + {str(round(sum(xi),4))}b = {str(round(sum(xi_yi), 4))}')
-    print(f'\n {str(round(sum(xi), 4))}a + {n}b = {str(round(sum(yi), 4))}')
+    print(f'Σxi = {xi} = {round(float(sum(xi)), 4)}')
+    print(f'Σyi = {yi} = {round(float(sum(yi)), 4)}')
+    print(f'Σxi² = {xi_sq} = {round(float(sum(xi_sq)), 4)}')
+    print(f'Σxiyi = {xi_yi} = {round(float(sum(xi_yi)), 4)}')
+    print(f'\n {round(float(sum(xi_sq)), 4)}a + {round(float(sum(xi)),4)}b = {round(float(sum(xi_yi)), 4)}')
+    print(f'\n {round(float(sum(xi)), 4)}a + {n}b = {round(float(sum(yi)), 4)}')
     return
 
 

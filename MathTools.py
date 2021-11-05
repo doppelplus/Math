@@ -7,8 +7,8 @@ class Equation:
     def __init__(self, equation):
         self.ALLOWED_NAMES = {k: v for k, v in math.__dict__.items() if not k.startswith("__")}
         self.ALLOWED_NAMES.update({'x': 'x'})
-        self.ALLOWED_NAMES.update({'x': 'y'})
-        self.ALLOWED_NAMES.update({'x': 'z'})
+        self.ALLOWED_NAMES.update({'y': 'y'})
+        self.ALLOWED_NAMES.update({'z': 'z'})
         self.x = sp.symbols('x')
         self.y = sp.symbols('y')
         self.z = sp.symbols('z')
@@ -183,6 +183,7 @@ def jacobi_method() -> None:
     for j in range(n):
         for i in range(n):
             print("roiroi")
+            print("asldkj")
             raw_matrix[j][i] = float(input(f'Type A{j}{i}\t'))
     m = sp.Matrix(raw_matrix)
     sp.pretty_print(m)

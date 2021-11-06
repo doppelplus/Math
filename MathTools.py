@@ -9,9 +9,8 @@ class Equation:
         self.ALLOWED_NAMES.update({'x': 'x'})
         self.ALLOWED_NAMES.update({'y': 'y'})
         self.ALLOWED_NAMES.update({'z': 'z'})
-        self.x = sp.symbols('x')
-        self.y = sp.symbols('y')
-        self.z = sp.symbols('z')
+        self.x, y, z = sp.symbols('x y z')
+
         # Security: check for malicious string
         evaluate = compile(equation, "<string>", "eval")
         for name in evaluate.co_names:
@@ -57,11 +56,11 @@ def simpson_method() -> None:
 
             if i % 2 != 0 and i != 0 and i != 2 * n:
                 y1 += ans
-                table.add_row([i, x, ' ', ans, ' '])
+                table.add_row([i, round(float(x), rv), ' ', ans, ' '])
 
             if i % 2 == 0 and i != 2 * n and i > 0:
                 y2 += ans
-                table.add_row([i, x, ' ', ' ', ans])
+                table.add_row([i, round(float(x), rv), ' ', ' ', ans])
             x += h
 
         table.add_row(['--', '----', '----', '----', '----'])
@@ -72,6 +71,9 @@ def simpson_method() -> None:
         approx_ans = (h / 3) * (y0 + (4 * y1) + (2 * y2))
         print("S", (2 * n), " = (", round(float(h), rv), '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(float(approx_ans), rv))
         answer.append(approx_ans)
+
+        if epsilon == 0:
+            break
         if iteration >= 1:
             precision = round(float(abs(answer[iteration] - answer[iteration - 1])), rv)
             if precision < epsilon:

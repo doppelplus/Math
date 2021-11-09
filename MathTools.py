@@ -1,5 +1,6 @@
 import math
 import sympy as sp
+import numpy as np
 from prettytable import PrettyTable
 
 
@@ -155,7 +156,7 @@ def bisection_method() -> None:
     b = float(input("Type b: \t"))
     epsilon = float(input("Type epsilon: \t"))
     formula = Equation(input("Type equation: \t"))
-    if formula.solve_for(a) * formula.solve_for(b) >= 0:
+    if formula.solve_for('x', a) * formula.solve_for('x', b) >= 0:
         print("Value for a and b wrong ")
         return
     while True:
@@ -168,7 +169,7 @@ def bisection_method() -> None:
             print(f'Approximate Zero point is {xm}')
             break
         else:
-            pm = formula.solve_for('x', xm) * formula.solve_for(a)
+            pm = formula.solve_for('x', xm) * formula.solve_for('x', a)
             if pm > 0:
                 a = xm
             elif pm < 0:
@@ -184,11 +185,11 @@ def jacobi_method() -> None:
     raw_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
     for j in range(n):
         for i in range(n):
-            print("roiroi")
-            print("asldkj")
-            raw_matrix[j][i] = float(input(f'Type A{j}{i}\t'))
+            raw_matrix[j][i] = float(input(f'Type Aj{j}i{i}\t'))
     m = sp.Matrix(raw_matrix)
+    d = sp.Matrix(np.diagflat(m))
     sp.pretty_print(m)
+    sp.pretty_print(d)
     return
 
 

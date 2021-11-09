@@ -156,17 +156,21 @@ def bisection_method() -> None:
     b = float(input("Type b: \t"))
     epsilon = float(input("Type epsilon: \t"))
     formula = Equation(input("Type equation: \t"))
+    iterations = 0
     if formula.solve_for('x', a) * formula.solve_for('x', b) >= 0:
         print("Value for a and b wrong ")
         return
+    table = PrettyTable(['n', 'an', 'bn', 'xn', 'f(an)','f(bn)', 'f(xn)'])
     while True:
+
         xm = (a + b) / 2
         answer = formula.solve_for('x', xm)
+        table.add_row([iterations, a, b, xm, formula.solve_for('x', a), formula.solve_for('x', b), answer])
         if answer == 0:
             print(f'Exact Zero point is {xm}')
             break
         elif b - a < epsilon:
-            print(f'Approximate Zero point is {xm}')
+            print(f'Approximate Zero point is {xm} after {iterations} iterations')
             break
         else:
             pm = formula.solve_for('x', xm) * formula.solve_for('x', a)
@@ -175,6 +179,9 @@ def bisection_method() -> None:
             elif pm < 0:
                 b = xm
 
+        iterations += 1
+
+    print(table)
 
 def jacobi_method() -> None:
     sp.init_printing(pretty_print=True)

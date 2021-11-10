@@ -1,6 +1,5 @@
 import math
 import sympy as sp
-import numpy as np
 from prettytable import PrettyTable
 
 
@@ -8,10 +7,11 @@ class Equation:
     def __init__(self, equation):
         self.ALLOWED_NAMES = {k: v for k, v in math.__dict__.items() if not k.startswith("__")}
         self.ALLOWED_NAMES.update({'x': 'x'})
-        self.ALLOWED_NAMES.update({'y': 'y'})
-        self.ALLOWED_NAMES.update({'z': 'z'})
-        self.x, y, z = sp.symbols('x y z')
-
+        self.ALLOWED_NAMES.update({'x': 'y'})
+        self.ALLOWED_NAMES.update({'x': 'z'})
+        self.x = sp.symbols('x')
+        self.y = sp.symbols('y')
+        self.z = sp.symbols('z')
         # Security: check for malicious string
         evaluate = compile(equation, "<string>", "eval")
         for name in evaluate.co_names:
@@ -30,7 +30,7 @@ class Equation:
 def simpson_method() -> None:
     answer = []
     print("Solve Integrals with Simpson rule")
-    equation = Equation(input("Type equation in python syntax:\t"))
+    equation_string = input("Type equation in python syntax:\t")
     n = int(input("Type value for n:\t"))
     if n < 1:
         print("Wrong Arguments, aborted!")
@@ -41,49 +41,96 @@ def simpson_method() -> None:
     b = float(input("Type value for b:\t"))
     h = float((b - a) / (2 * n))
     x = a
+    y0 = 0.0
+    y1 = 0.0
+    y2 = 0.0
+    table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
 
     iteration = 0
     while n <= 100:
-        y0 = 0.0
-        y1 = 0.0
-        y2 = 0.0
-        table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
         print("\nn = ", n)
+        equation = Equation(equation_string)
         for i in range((2 * n) + 1):
             ans = round(float(equation.solve_for('x', x)), rv)
             if i == 0 or i == 2 * n:
                 y0 += ans
-                table.add_row([i, round(float(x), rv), ans, ' ', ' '])
+                table.add_row([i, x, ans, ' ', ' '])
 
             if i % 2 != 0 and i != 0 and i != 2 * n:
                 y1 += ans
-                table.add_row([i, round(float(x), rv), ' ', ans, ' '])
+                table.add_row([i, x, ' ', ans, ' '])
 
             if i % 2 == 0 and i != 2 * n and i > 0:
                 y2 += ans
-                table.add_row([i, round(float(x), rv), ' ', ' ', ans])
+                table.add_row([i, x, ' ', ' ', ans])
             x += h
 
         table.add_row(['--', '----', '----', '----', '----'])
         table.add_row(['Σx', '=', round(float(y0), rv), round(float(y1), rv), round(float(y2), rv)])
         print(table)
-        table.clear()
         print("Σ0 = ", round(float(y0), rv), " | Σ1 = ", round(float(y1), rv), " | Σ2 = ", round(float(y2), rv))
         approx_ans = (h / 3) * (y0 + (4 * y1) + (2 * y2))
         print("S", (2 * n), " = (", round(float(h), rv), '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(float(approx_ans), rv))
         answer.append(approx_ans)
-
-        if epsilon == 0:
-            break
         if iteration >= 1:
             precision = round(float(abs(answer[iteration] - answer[iteration - 1])), rv)
-            if precision < epsilon:
+            if precision < epsilon or epsilon == 0:
                 print("Precision is good enough", precision)
                 break
             else:
                 print("Precision not good", precision)
         n *= 2
         iteration = iteration + 1
+
+
+def trapeze_method() -> None:
+    answer = []
+    print("Solve Integrals with Trapez rule")
+    equation_string = input("Type equation in python syntax:\t")
+    n = int(input("Type value for n:\t"))
+    if n < 1:
+        print("Wrong Arguments, aborted!")
+        return
+    epsilon = float(input("Type epsilon Value like 0.001:\t"))
+    rv = int(input("Type precision value like 5:\t"))
+    a = float(input("Type value for a:\t"))
+    b = float(input("Type value for b:\t"))
+    h = float((b - a) / n)
+    x = a
+    y0 = 0.0
+    y1 = 0.0
+    table = PrettyTable(['i', 'Xi', 'y0', 'y1'])
+
+    iteration = 0
+    while n <= 100:
+        print("\nn = ", n)
+        equation = Equation(equation_string)
+        for i in range(n + 1):
+            x = (a + i * h)
+            ans = round(float(equation.solve_for('x', x)), rv)
+            if i == 0 or i == n:
+                y0 += ans
+                table.add_row([i, round(x, rv), ans, ' '])
+            else:
+                y1 += ans
+                table.add_row([i, round(x, rv), ' ', ans])
+
+        table.add_row(['--', '----', '----', '----'])
+        table.add_row(['Σx', '=', round(float(y0), rv), round(float(y1), rv)])
+        print(table)
+        print("Σ0 = ", round(float(y0), rv), " | Σ1 = ", round(float(y1), rv))
+        approx_ans = (h / 2) * (y0 + (2 * y1))
+        print("T", n, " = (", round(float(h), rv), '/', 2, ")(Σ0 + 2 * Σ1 ) = ", round(float(approx_ans), rv))
+        answer.append(approx_ans)
+        precision = round(float(abs(answer[iteration] - answer[iteration - 1])), rv)
+        if precision < epsilon or epsilon == 0:
+            print("Precision is good enough", precision)
+            break
+        elif iteration >= 0:
+            print("Precision not good", precision)
+        n *= 2
+        iteration = iteration + 1
+
 
 
 def newton_method() -> None:
@@ -155,36 +202,25 @@ def bisection_method() -> None:
     a = float(input("Type a: \t"))
     b = float(input("Type b: \t"))
     epsilon = float(input("Type epsilon: \t"))
-    rv = int(input("Type precision value: \t"))
     formula = Equation(input("Type equation: \t"))
-    iterations = 0
-    if formula.solve_for('x', a) * formula.solve_for('x', b) >= 0:
+    if formula.solve_for(a) * formula.solve_for(b) >= 0:
         print("Value for a and b wrong ")
         return
-    print(f'Expected iterations: 1 + (precision + log(b-a)/log(2)= {math.ceil(1+(rv + math.log(b-a,10))/math.log(2, 10))}')
-    table = PrettyTable(['n', 'an', 'bn', 'xn', 'f(an)','f(bn)', 'f(xn)'])
-    table.align = "l"
     while True:
-
         xm = (a + b) / 2
         answer = formula.solve_for('x', xm)
-        table.add_row([iterations, round(float(a), rv), round(float(b), rv), round(float(xm), rv), round(float(formula.solve_for('x', a)), rv), round(float(formula.solve_for('x', b)), rv), round(float(answer), rv)])
         if answer == 0:
             print(f'Exact Zero point is {xm}')
             break
         elif b - a < epsilon:
-            print(f'Approximate Zero point is {round(float(xm), rv)} after {iterations} iterations')
+            print(f'Approximate Zero point is {xm}')
             break
         else:
-            pm = formula.solve_for('x', xm) * formula.solve_for('x', a)
+            pm = formula.solve_for('x', xm) * formula.solve_for(a)
             if pm > 0:
                 a = xm
             elif pm < 0:
                 b = xm
-
-        iterations += 1
-
-    print(table)
 
 
 def jacobi_method() -> None:
@@ -196,11 +232,10 @@ def jacobi_method() -> None:
     raw_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
     for j in range(n):
         for i in range(n):
-            raw_matrix[j][i] = float(input(f'Type Aj{j}i{i}\t'))
+            print("roiroi")
+            raw_matrix[j][i] = float(input(f'Type A{j}{i}\t'))
     m = sp.Matrix(raw_matrix)
-    d = sp.Matrix(np.diagflat(m))
     sp.pretty_print(m)
-    sp.pretty_print(d)
     return
 
 
@@ -209,6 +244,7 @@ def gauss_seidel_method() -> None:
 
 
 def print_menu() -> None:
+    print("0 Trapeze Method")
     print("1 Simpson Method")
     print("2 Newtons Method")
     print("3 Best fit line")
@@ -224,7 +260,8 @@ def main() -> None:
     while choice != 'c':
         print_menu()
         choice = input()
-
+        if choice == '0':
+            trapeze_method()
         if choice == '1':
             simpson_method()
         if choice == '2':

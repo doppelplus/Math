@@ -132,16 +132,30 @@ def trapeze_method() -> None:
         iteration = iteration + 1
 
 
-
 def newton_method() -> None:
     x = float(input("Type start value for x:\t"))
     n = int(input("Type value for n:\t"))
+    rv = int(input("Type precision value like 5:\t"))
+    epsilon = float(input("Type epsilon Value like 0.001:\t"))
     f = Equation(input("Type f in python syntax:\t"))
 
     table = PrettyTable(['i', 'Xi'])
-    for i in range(n):
-        x = f.solve_for('x', x)
-        table.add_row(([i, x, ]))
+    if epsilon == 0:
+        for i in range(n):
+            x = float(f.solve_for('x', x))
+            table.add_row(([i, round(x, rv)]))
+    else:
+        prev = 0.0
+        for i in range(1000):  # make sure the loop has an end
+            x = float(f.solve_for('x', x))
+            table.add_row(([i, round(x, rv)]))
+            if i >= 1:
+                precision = abs(x - prev)
+                if precision < epsilon:
+                    print(f'Precision reached, approximate answer is {x}')
+                    break;
+            prev = x
+            i += 1
     print(table)
     return
 

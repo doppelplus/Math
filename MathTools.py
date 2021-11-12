@@ -202,25 +202,36 @@ def bisection_method() -> None:
     a = float(input("Type a: \t"))
     b = float(input("Type b: \t"))
     epsilon = float(input("Type epsilon: \t"))
+    rv = int(input("Type precision value: \t"))
     formula = Equation(input("Type equation: \t"))
-    if formula.solve_for(a) * formula.solve_for(b) >= 0:
+    iterations = 0
+    if formula.solve_for('x', a) * formula.solve_for('x', b) >= 0:
         print("Value for a and b wrong ")
         return
+    print(f'Expected iterations: 1 + (precision + log(b-a)/log(2)= {math.ceil(1+(rv + math.log(b-a,10))/math.log(2, 10))}')
+    table = PrettyTable(['n', 'an', 'bn', 'xn', 'f(an)','f(bn)', 'f(xn)'])
+    table.align = "l"
     while True:
+
         xm = (a + b) / 2
         answer = formula.solve_for('x', xm)
+        table.add_row([iterations, round(float(a), rv), round(float(b), rv), round(float(xm), rv), round(float(formula.solve_for('x', a)), rv), round(float(formula.solve_for('x', b)), rv), round(float(answer), rv)])
         if answer == 0:
             print(f'Exact Zero point is {xm}')
             break
         elif b - a < epsilon:
-            print(f'Approximate Zero point is {xm}')
+            print(f'Approximate Zero point is {round(float(xm), rv)} after {iterations} iterations')
             break
         else:
-            pm = formula.solve_for('x', xm) * formula.solve_for(a)
+            pm = formula.solve_for('x', xm) * formula.solve_for('x', a)
             if pm > 0:
                 a = xm
             elif pm < 0:
                 b = xm
+
+        iterations += 1
+
+    print(table)
 
 
 def jacobi_method() -> None:

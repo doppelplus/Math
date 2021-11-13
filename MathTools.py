@@ -1,5 +1,6 @@
 import math
 import sympy as sp
+import numpy as np
 from prettytable import PrettyTable
 
 
@@ -250,18 +251,45 @@ def bisection_method() -> None:
 
 def jacobi_method() -> None:
     sp.init_printing(pretty_print=True)
-    n = int(input("Type n (Matrix is n x n)\t"))
-    if n <= 1:
+    mn = int(input("Type n (Matrix is n x n)\t"))
+    n = int(input("Type iterations\t"))
+    x = [0.0 for _ in range(mn)]
+
+    for i in range(mn):
+        x = float(input(f'Type Start vector\t {i}\t'))
+    if mn <= 1:
         print("Wrong Input, aborted")
         return
-    raw_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
-    for j in range(n):
-        for i in range(n):
-            print("roiroi")
-            raw_matrix[j][i] = float(input(f'Type A{j}{i}\t'))
-    m = sp.Matrix(raw_matrix)
-    sp.pretty_print(m)
-    return
+    raw_matrix_a = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_l = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_d = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_r = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_b = [0.0 for _ in range(mn)]
+    for j in range(mn):
+        for i in range(mn):
+            raw_matrix_a[j][i] = float(input(f'Type A{j}{i}\t'))
+            if i == j:
+                raw_matrix_d[j][i] = raw_matrix_a[j][i]
+            if j > i:
+                raw_matrix_l[j][i] = raw_matrix_a[j][i]
+            if j < i:
+                raw_matrix_r[j][i] = raw_matrix_a[j][i]
+
+    for i in range(mn):
+        raw_matrix_b[i] = float(input(f'Type b{i}\t'))
+
+    A = sp.Matrix(raw_matrix_a)
+    b = sp.Matrix(raw_matrix_b)
+    L = sp.Matrix(raw_matrix_l)
+    R = sp.Matrix(raw_matrix_r)
+    D = sp.Matrix(raw_matrix_d)
+    G = -D.inv()*(L+R)
+    sp.pprint(G)
+    d = D.inv()*b
+    sp.pprint(d)
+    for i in range(1, n):
+        x = G * x + d  # Problem, bring x to vector form to get it multiplied with the matrix
+    print(f'Approximate solution{x}')
 
 
 def gauss_seidel_method() -> None:

@@ -290,6 +290,10 @@ def jacobi_method() -> None:
     G = -D.inv()*(L+R)
     x = sp.Matrix(raw_vector)
     d = D.inv()*b
+    print("G = ")
+    sp.pprint(G)
+    print("d = ")
+    sp.pprint(d)
 
     # Jacobi algorithm
     for i in range(n):
@@ -342,6 +346,10 @@ def gauss_seidel_method() -> None:
     S = sp.Matrix(-(L+D)).inv() * R
     d = sp.Matrix(L + D).inv() *b
     x = sp.Matrix(raw_vector)
+    print("S = ")
+    sp.pprint(S)
+    print("d = ")
+    sp.pprint(d)
     for i in range(n):
         prev_x = x
         x = S * x + d

@@ -303,6 +303,50 @@ def jacobi_method() -> None:
     print(table)
 
 def gauss_seidel_method() -> None:
+    mn = int(input("Type n (Matrix is n x n)\t"))
+    n = int(input("Type iterations\t"))
+    raw_vector = [0.0 for _ in range(mn)]
+    table_columns = [f'x{_}' for _ in range(mn)]
+    table = PrettyTable(['k', table_columns, 'max_i | xi^(k-1)-xi^k'])
+    for i in range(mn):
+        raw_vector[i] = float(input(f'Type Start vector\t {i}\t'))
+    if mn <= 1:
+        print("Wrong Input, aborted")
+        return
+    raw_matrix_a = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_l = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_d = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_r = [[0.0 for _ in range(mn)] for _ in range(mn)]
+    raw_matrix_b = [0.0 for _ in range(mn)]
+
+    # Input for matrices A, D, L, R
+    for j in range(mn):
+        for i in range(mn):
+            raw_matrix_a[j][i] = float(input(f'Type A{j}{i}\t'))
+            if i == j:
+                raw_matrix_d[j][i] = raw_matrix_a[j][i]
+            if j > i:
+                raw_matrix_l[j][i] = raw_matrix_a[j][i]
+            if j < i:
+                raw_matrix_r[j][i] = raw_matrix_a[j][i]
+
+    # Input for vector b
+    for i in range(mn):
+        raw_matrix_b[i] = float(input(f'Type b{i}\t'))
+
+    for iterator in range(n):
+        for j in range(0, n):
+            # temp variable d to store b[j]
+            d = raw_matrix_b[j]
+
+            # to calculate respective xi, yi, zi
+            for i in range(0, n):
+                if j != i:
+                    d -= raw_matrix_a[j][i] * raw_vector[i]
+            # updating the value of our solution
+            raw_vector[j] = d / raw_matrix_a[j][j]
+        table.add_row(iterator, raw_vector)
+    print(table)
     return
 
 

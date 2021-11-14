@@ -334,20 +334,23 @@ def gauss_seidel_method() -> None:
     for i in range(mn):
         raw_matrix_b[i] = float(input(f'Type b{i}\t'))
 
-    for iterator in range(n):
-        for j in range(0, n):
-            # temp variable d to store b[j]
-            d = raw_matrix_b[j]
-
-            # to calculate respective xi, yi, zi
-            for i in range(0, n):
-                if j != i:
-                    d -= raw_matrix_a[j][i] * raw_vector[i]
-            # updating the value of our solution
-            raw_vector[j] = d / raw_matrix_a[j][j]
-        table.add_row(iterator, raw_vector)
+    A = sp.Matrix(raw_matrix_a)
+    b = sp.Matrix(raw_matrix_b)
+    L = sp.Matrix(raw_matrix_l)
+    R = sp.Matrix(raw_matrix_r)
+    D = sp.Matrix(raw_matrix_d)
+    S = sp.Matrix(-(L+D)).inv() * R
+    d = sp.Matrix(L + D).inv() *b
+    x = sp.Matrix(raw_vector)
+    for i in range(n):
+        prev_x = x
+        x = S * x + d
+        if i >= 1:
+            table.add_row([i, x, max(abs(x - prev_x))])
+        else:
+            table.add_row([i, x, ""])
+    print(f'Approximate solution {x}')
     print(table)
-    return
 
 
 def print_menu() -> None:

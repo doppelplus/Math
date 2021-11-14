@@ -253,10 +253,11 @@ def jacobi_method() -> None:
     sp.init_printing(pretty_print=True)
     mn = int(input("Type n (Matrix is n x n)\t"))
     n = int(input("Type iterations\t"))
-    x = [0.0 for _ in range(mn)]
-
+    raw_vector = [0.0 for _ in range(mn)]
+    table_columns = [f'x{_}' for _ in range(mn)]
+    table = PrettyTable(['k', table_columns, 'max_i | xi^(k-1)-xi^k'])
     for i in range(mn):
-        x = float(input(f'Type Start vector\t {i}\t'))
+        raw_vector[i] = float(input(f'Type Start vector\t {i}\t'))
     if mn <= 1:
         print("Wrong Input, aborted")
         return
@@ -265,6 +266,8 @@ def jacobi_method() -> None:
     raw_matrix_d = [[0.0 for _ in range(mn)] for _ in range(mn)]
     raw_matrix_r = [[0.0 for _ in range(mn)] for _ in range(mn)]
     raw_matrix_b = [0.0 for _ in range(mn)]
+
+    # Input for matrices A, D, L, R
     for j in range(mn):
         for i in range(mn):
             raw_matrix_a[j][i] = float(input(f'Type A{j}{i}\t'))
@@ -275,6 +278,7 @@ def jacobi_method() -> None:
             if j < i:
                 raw_matrix_r[j][i] = raw_matrix_a[j][i]
 
+    # Input for vector b
     for i in range(mn):
         raw_matrix_b[i] = float(input(f'Type b{i}\t'))
 
@@ -284,13 +288,19 @@ def jacobi_method() -> None:
     R = sp.Matrix(raw_matrix_r)
     D = sp.Matrix(raw_matrix_d)
     G = -D.inv()*(L+R)
-    sp.pprint(G)
+    x = sp.Matrix(raw_vector)
     d = D.inv()*b
-    sp.pprint(d)
-    for i in range(1, n):
-        x = G * x + d  # Problem, bring x to vector form to get it multiplied with the matrix
-    print(f'Approximate solution{x}')
 
+    # Jacobi algorithm
+    for i in range(n):
+        prev_x = x
+        x = G * x + d
+        if i >= 1:
+            table.add_row([i, x, max(abs(x - prev_x))])
+        else:
+            table.add_row([i, x, ""])
+    print(f'Approximate solution {x}')
+    print(table)
 
 def gauss_seidel_method() -> None:
     return

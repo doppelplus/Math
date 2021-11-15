@@ -25,7 +25,7 @@ class Equation:
         return self.eq.subs(var, value)
 
     def __repr__(self):
-        return f'{self.__class__.__name__}('f'{self.eq})'
+        return f'{self.eq.simplify()}'
 
 
 def simpson_method() -> None:
@@ -375,15 +375,25 @@ def gauss_seidel_method() -> None:
 def lagrange_interpolation():
     n = int(input("Type number of Points:\t"))
     points = []
+    lg_poly_str = ["" for _ in range(n)]
+    lg_poly_equations = []
+    lagrange_equation_str = ""
     for i in range(n):
-        a = input(f'Type point_{i} separated with comma')
+        a = input(f'Type point_{i} separated with comma\t')
         points.append(tuple(float(x) for x in a.split(",")))
-    lagrange_polynomials = []
+    print("\n")
     for i in range(n):
-        for x in range(n-1):
-            lagrange_polynomials.append()
+        for j in range(n):
+            if i != j:
+                lg_poly_str[i] += f'((x-{points[j][0]})/({points[i][0]}-{points[j][0]}))*'
+        lg_poly_str[i] += f'{points[i][1]}'
 
-
+    for i in range(n):
+        lg_poly_equations.append(Equation(lg_poly_str[i]))
+        lagrange_equation_str += f'{lg_poly_str[i]} + '
+        print(f'Polynom L_{i} = {lg_poly_equations[i]})')
+    lagrange_equation = Equation(lagrange_equation_str[:-2])
+    print(f'P_{n-1}(x) = {lagrange_equation}\n')
 
 def print_menu() -> None:
     print("0 Trapeze Method")

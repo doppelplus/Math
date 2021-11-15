@@ -71,7 +71,8 @@ def simpson_method() -> None:
         print(table)
         print("Σ0 = ", round(float(y0), rv), " | Σ1 = ", round(float(y1), rv), " | Σ2 = ", round(float(y2), rv))
         approx_ans = (h / 3) * (y0 + (4 * y1) + (2 * y2))
-        print("S", (2 * n), " = (", round(float(h), rv), '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ", round(float(approx_ans), rv))
+        print("S", (2 * n), " = (", round(float(h), rv), '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ",
+              round(float(approx_ans), rv))
         answer.append(approx_ans)
         if iteration >= 1:
             precision = round(float(abs(answer[iteration] - answer[iteration - 1])), rv)
@@ -154,7 +155,7 @@ def newton_method() -> None:
                 precision = abs(x - prev)
                 if precision < epsilon:
                     print(f'Precision reached, approximate answer is {x}')
-                    break;
+                    break
             prev = x
             i += 1
     print(table)
@@ -182,7 +183,7 @@ def best_fit_line() -> None:
     print(f'Σyi = {yi} = {round(float(sum(yi)), 4)}')
     print(f'Σxi² = {xi_sq} = {round(float(sum(xi_sq)), 4)}')
     print(f'Σxiyi = {xi_yi} = {round(float(sum(xi_yi)), 4)}')
-    print(f'\n {round(float(sum(xi_sq)), 4)}a + {round(float(sum(xi)),4)}b = {round(float(sum(xi_yi)), 4)}')
+    print(f'\n {round(float(sum(xi_sq)), 4)}a + {round(float(sum(xi)), 4)}b = {round(float(sum(xi_yi)), 4)}')
     print(f'\n {round(float(sum(xi)), 4)}a + {n}b = {round(float(sum(yi)), 4)}')
     return
 
@@ -192,7 +193,10 @@ def horner_method():
     col_list = ['x' + str(i) for i in range(n)]
     col_list.reverse()
 
-    poly_list = [[None for _ in range(n)], ['+' for _ in range(n)], [None for _ in range(n)], ['---' for _ in range(n)],
+    poly_list = [[None for _ in range(n)],
+                 ['+' for _ in range(n)],
+                 [None for _ in range(n)],
+                 ['---' for _ in range(n)],
                  [None for _ in range(n)]]
 
     table = PrettyTable(col_list)
@@ -223,14 +227,20 @@ def bisection_method() -> None:
     if formula.solve_for('x', a) * formula.solve_for('x', b) >= 0:
         print("Value for a and b wrong ")
         return
-    print(f'Expected iterations: 1 + (precision + log(b-a)/log(2)= {math.ceil(1+(rv + math.log(b-a,10))/math.log(2, 10))}')
-    table = PrettyTable(['n', 'an', 'bn', 'xn', 'f(an)','f(bn)', 'f(xn)'])
+    print(f'Expected iterations: 1 + (precision + log(b-a)/log(2)= '
+          f'{math.ceil(1 + (rv + math.log(b - a, 10)) / math.log(2, 10))}')
+    table = PrettyTable(['n', 'an', 'bn', 'xn', 'f(an)', 'f(bn)', 'f(xn)'])
     table.align = "l"
     while True:
 
         xm = (a + b) / 2
         answer = formula.solve_for('x', xm)
-        table.add_row([iterations, round(float(a), rv), round(float(b), rv), round(float(xm), rv), round(float(formula.solve_for('x', a)), rv), round(float(formula.solve_for('x', b)), rv), round(float(answer), rv)])
+        table.add_row([iterations, round(float(a), rv),
+                       round(float(b), rv),
+                       round(float(xm), rv),
+                       round(float(formula.solve_for('x', a)), rv),
+                       round(float(formula.solve_for('x', b)), rv),
+                       round(float(answer), rv)])
         if answer == 0:
             print(f'Exact Zero point is {xm}')
             break
@@ -287,9 +297,9 @@ def jacobi_method() -> None:
     L = sp.Matrix(raw_matrix_l)
     R = sp.Matrix(raw_matrix_r)
     D = sp.Matrix(raw_matrix_d)
-    G = -D.inv()*(L+R)
+    G = -D.inv() * (L + R)
     x = sp.Matrix(raw_vector)
-    d = D.inv()*b
+    d = D.inv() * b
     print("G = ")
     sp.pprint(G)
     print("d = ")
@@ -305,6 +315,7 @@ def jacobi_method() -> None:
             table.add_row([i, x, ""])
     print(f'Approximate solution {x}')
     print(table)
+
 
 def gauss_seidel_method() -> None:
     mn = int(input("Type n (Matrix is n x n)\t"))
@@ -343,8 +354,8 @@ def gauss_seidel_method() -> None:
     L = sp.Matrix(raw_matrix_l)
     R = sp.Matrix(raw_matrix_r)
     D = sp.Matrix(raw_matrix_d)
-    S = sp.Matrix(-(L+D)).inv() * R
-    d = sp.Matrix(L + D).inv() *b
+    S = sp.Matrix(-(L + D)).inv() * R
+    d = sp.Matrix(L + D).inv() * b
     x = sp.Matrix(raw_vector)
     print("S = ")
     sp.pprint(S)
@@ -361,6 +372,10 @@ def gauss_seidel_method() -> None:
     print(table)
 
 
+def lagrange_interpolation():
+    return
+
+
 def print_menu() -> None:
     print("0 Trapeze Method")
     print("1 Simpson Method")
@@ -370,6 +385,7 @@ def print_menu() -> None:
     print("5 Biscetive Method")
     print("6 JacobiMethod")
     print("7 Gauss-Seidel Method")
+    print("8 Lagrange interpolation")
     print("Press 'c' to close")
 
 
@@ -394,7 +410,8 @@ def main() -> None:
             jacobi_method()
         if choice == '7':
             gauss_seidel_method()
-
+        if choice == '8':
+            lagrange_interpolation()
         if choice == 'c':
             return
     return
@@ -403,20 +420,24 @@ def main() -> None:
 """
 # only for python 3.10
     match choice:
+        case 0:
+            trapeze_method()
         case 1:
-            SimpsonMethod()
+            simpson_method()
         case 2:
-            NewtonMethod()
+            newton_method()
         case 3:
-            BestFitLine()
+            best_fit_line()
         case 4:
-            HornerMethod()
+            horner_method()
         case 5:
-            BisectionMethod()
+            bisection_method()
         case 6:
-            JacobiMethod()
+            jacobi_method()
         case 7:
-            GaussSeidelMethod()
+            gauss_seidel_method()
+        case 8:
+            lagrange_interpolation()
         case _:
             print("Input Error")
         

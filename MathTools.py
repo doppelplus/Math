@@ -373,7 +373,16 @@ def gauss_seidel_method() -> None:
 
 
 def lagrange_interpolation():
-    return
+    n = int(input("Type number of Points:\t"))
+    points = []
+    for i in range(n):
+        a = input(f'Type point_{i} separated with comma')
+        points.append(tuple(float(x) for x in a.split(",")))
+    lagrange_polynomials = []
+    for i in range(n):
+        for x in range(n-1):
+            lagrange_polynomials.append()
+
 
 
 def print_menu() -> None:

@@ -372,7 +372,7 @@ def gauss_seidel_method() -> None:
     print(table)
 
 
-def lagrange_interpolation():
+def lagrange_interpolation()-> None:
     n = int(input("Type number of Points:\t"))
     points = []
     lg_poly_str = ["" for _ in range(n)]
@@ -395,6 +395,29 @@ def lagrange_interpolation():
     lagrange_equation = Equation(lagrange_equation_str[:-2])
     print(f'P_{n-1}(x) = {lagrange_equation}\n')
 
+
+def newton_interpolation()-> None:
+    n = int(input("Type number of Points:\t"))
+    coefficients = [[0.0 for _ in range(n)]for _ in range(n+1)]
+    # input
+    for i in range(n):
+        a = input(f'Type point_{i} separated with comma\t')
+        tmp = a.split(",")
+        if not len(tmp) == 2:
+            print("Input Error")
+            return
+        coefficients[0][i] = float(tmp[0])
+        coefficients[1][i] = float(tmp[1])
+
+    for j in range(2, n):
+        for i in range(n-1):
+            coefficients[j + i][i] = (coefficients[i + 1][i] - coefficients[i + 1][i + 1]) /(coefficients[i][i] - coefficients[i][i + 1])
+
+    print("")
+
+    print("\n")
+
+
 def print_menu() -> None:
     print("0 Trapeze Method")
     print("1 Simpson Method")
@@ -405,6 +428,7 @@ def print_menu() -> None:
     print("6 JacobiMethod")
     print("7 Gauss-Seidel Method")
     print("8 Lagrange interpolation")
+    print("9 Newton interpolation")
     print("Press 'c' to close")
 
 
@@ -431,6 +455,8 @@ def main() -> None:
             gauss_seidel_method()
         if choice == '8':
             lagrange_interpolation()
+        if choice == '9':
+            newton_interpolation()
         if choice == 'c':
             return
     return
@@ -463,3 +489,4 @@ def main() -> None:
 """
 if __name__ == "__main__":
     main()
+

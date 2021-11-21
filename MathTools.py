@@ -372,7 +372,7 @@ def gauss_seidel_method() -> None:
     print(table)
 
 
-def lagrange_interpolation()-> None:
+def lagrange_interpolation() -> None:
     n = int(input("Type number of Points:\t"))
     points = []
     lg_poly_str = ["" for _ in range(n)]
@@ -396,7 +396,7 @@ def lagrange_interpolation()-> None:
     print(f'P_{n-1}(x) = {lagrange_equation}\n')
 
 
-def newton_interpolation()-> None:
+def newton_interpolation() -> None:
     n = int(input("Type number of Points:\t"))
     coefficients = [[0.0 for _ in range(n)]for _ in range(n+1)]
     # input
@@ -411,7 +411,8 @@ def newton_interpolation()-> None:
 
     for j in range(2, n):
         for i in range(n-1):
-            coefficients[j + i][i] = (coefficients[i + 1][i] - coefficients[i + 1][i + 1]) /(coefficients[i][i] - coefficients[i][i + 1])
+            coefficients[j][i] = (coefficients[j - 1][i] - coefficients[j-1][i + 1]) / (coefficients[j-2][i] - coefficients[j-2][i + 1])
+            print(f'Answer[{j}][{i}]: {coefficients[j][i]} = {coefficients[j - 1][i] } - {coefficients[j-1][i + 1]} / {coefficients[j-2][i]} - {coefficients[j-2][i + 1]}')
 
     print("")
 
@@ -419,17 +420,18 @@ def newton_interpolation()-> None:
 
 
 def print_menu() -> None:
-    print("0 Trapeze Method")
-    print("1 Simpson Method")
-    print("2 Newtons Method")
-    print("3 Best fit line")
-    print("4 Horner Method")
-    print("5 Biscetive Method")
-    print("6 JacobiMethod")
-    print("7 Gauss-Seidel Method")
-    print("8 Lagrange interpolation")
-    print("9 Newton interpolation")
-    print("Press 'c' to close")
+    print("\n"
+          "0 Trapeze Method\n"
+          "1 Simpson Method\n"
+          "2 Newtons Method\n"
+          "3 Best fit line\n"
+          "4 Horner Method\n"
+          "5 Biscetive Method\n"
+          "6 JacobiMethod\n"
+          "7 Gauss-Seidel Method\n"
+          "8 Lagrange interpolation\n"
+          "9 Newton interpolation\n"
+          "Press 'c' to close")
 
 
 def main() -> None:

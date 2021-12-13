@@ -40,14 +40,14 @@ def simpson_method() -> None:
     rv = int(input("Type precision value like 5:\t"))
     a = float(input("Type value for a:\t"))
     b = float(input("Type value for b:\t"))
-    h = float((b - a) / (2 * n))
-    x = a
 
     iteration = 0
     while n <= 100:
         y0 = 0.0
         y1 = 0.0
         y2 = 0.0
+        x = a
+        h = float((b - a) / (2 * n))
         table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
         print("\nn = ", n)
         equation = Equation(equation_string)
@@ -476,25 +476,25 @@ def main() -> None:
         choice = input()
 
         match choice:
-            case 0:
+            case '0':
                 trapeze_method()
-            case 1:
+            case '1':
                 simpson_method()
-            case 2:
+            case '2':
                 newton_method()
-            case 3:
+            case '3':
                 best_fit_line()
-            case 4:
+            case '4':
                 horner_method()
-            case 5:
+            case '5':
                 bisection_method()
-            case 6:
+            case '6':
                 jacobi_method()
-            case 7:
+            case '7':
                 gauss_seidel_method()
-            case 8:
+            case '8':
                 lagrange_interpolation()
-            case 9:
+            case '9':
                 newton_interpolation()
             case _:
                 print("Input Error")

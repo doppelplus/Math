@@ -42,13 +42,13 @@ def simpson_method() -> None:
     b = float(input("Type value for b:\t"))
     h = float((b - a) / (2 * n))
     x = a
-    y0 = 0.0
-    y1 = 0.0
-    y2 = 0.0
-    table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
 
     iteration = 0
     while n <= 100:
+        y0 = 0.0
+        y1 = 0.0
+        y2 = 0.0
+        table = PrettyTable(['i', 'Xi', 'y0', 'y1', 'y2'])
         print("\nn = ", n)
         equation = Equation(equation_string)
         for i in range((2 * n) + 1):
@@ -69,6 +69,8 @@ def simpson_method() -> None:
         table.add_row(['--', '----', '----', '----', '----'])
         table.add_row(['Σx', '=', round(float(y0), rv), round(float(y1), rv), round(float(y2), rv)])
         print(table)
+        table.clear()
+
         print("Σ0 = ", round(float(y0), rv), " | Σ1 = ", round(float(y1), rv), " | Σ2 = ", round(float(y2), rv))
         approx_ans = (h / 3) * (y0 + (4 * y1) + (2 * y2))
         print("S", (2 * n), " = (", round(float(h), rv), '/', 3, ")(Σ0 + 4 * Σ1 + 2 * Σ2) = ",
@@ -99,12 +101,12 @@ def trapeze_method() -> None:
     b = float(input("Type value for b:\t"))
     h = float((b - a) / n)
     x = a
-    y0 = 0.0
-    y1 = 0.0
-    table = PrettyTable(['i', 'Xi', 'y0', 'y1'])
 
     iteration = 0
     while n <= 100:
+        y0 = 0.0
+        y1 = 0.0
+        table = PrettyTable(['i', 'Xi', 'y0', 'y1'])
         print("\nn = ", n)
         equation = Equation(equation_string)
         for i in range(n + 1):
@@ -120,6 +122,7 @@ def trapeze_method() -> None:
         table.add_row(['--', '----', '----', '----'])
         table.add_row(['Σx', '=', round(float(y0), rv), round(float(y1), rv)])
         print(table)
+        table.clear()
         print("Σ0 = ", round(float(y0), rv), " | Σ1 = ", round(float(y1), rv))
         approx_ans = (h / 2) * (y0 + (2 * y1))
         print("T", n, " = (", round(float(h), rv), '/', 2, ")(Σ0 + 2 * Σ1 ) = ", round(float(approx_ans), rv))
@@ -396,6 +399,38 @@ def lagrange_interpolation() -> None:
     print(f'P_{n-1}(x) = {lagrange_equation}\n')
 
 
+def _poly_newton_coefficient(x, y):
+    """
+    x: list or np array contanining x data points
+    y: list or np array contanining y data points
+    """
+
+    m = len(x)
+
+    x = np.copy(x)
+    a = np.copy(y)
+    for k in range(1, m):
+        a[k:m] = (a[k:m] - a[k - 1])/(x[k:m] - x[k - 1])
+
+    return a
+
+
+def newton_polynomial(x_data, y_data, x):
+    """
+    x_data: data points at x
+    y_data: data points at y
+    x: evaluation point(s)
+    """
+    a = _poly_newton_coefficient(x_data, y_data)
+    n = len(x_data) - 1  # Degree of polynomial
+    p = a[n]
+
+    for k in range(1, n + 1):
+        p = a[n - k] + (x - x_data[n - k])*p
+
+    return p
+
+
 def newton_interpolation() -> None:
     n = int(input("Type number of Points:\t"))
     coefficients = [[0.0 for _ in range(n)]for _ in range(n+1)]
@@ -439,56 +474,32 @@ def main() -> None:
     while choice != 'c':
         print_menu()
         choice = input()
-        if choice == '0':
-            trapeze_method()
-        if choice == '1':
-            simpson_method()
-        if choice == '2':
-            newton_method()
-        if choice == '3':
-            best_fit_line()
-        if choice == '4':
-            horner_method()
-        if choice == '5':
-            bisection_method()
-        if choice == '6':
-            jacobi_method()
-        if choice == '7':
-            gauss_seidel_method()
-        if choice == '8':
-            lagrange_interpolation()
-        if choice == '9':
-            newton_interpolation()
-        if choice == 'c':
-            return
-    return
+
+        match choice:
+            case 0:
+                trapeze_method()
+            case 1:
+                simpson_method()
+            case 2:
+                newton_method()
+            case 3:
+                best_fit_line()
+            case 4:
+                horner_method()
+            case 5:
+                bisection_method()
+            case 6:
+                jacobi_method()
+            case 7:
+                gauss_seidel_method()
+            case 8:
+                lagrange_interpolation()
+            case 9:
+                newton_interpolation()
+            case _:
+                print("Input Error")
 
 
-"""
-# only for python 3.10
-    match choice:
-        case 0:
-            trapeze_method()
-        case 1:
-            simpson_method()
-        case 2:
-            newton_method()
-        case 3:
-            best_fit_line()
-        case 4:
-            horner_method()
-        case 5:
-            bisection_method()
-        case 6:
-            jacobi_method()
-        case 7:
-            gauss_seidel_method()
-        case 8:
-            lagrange_interpolation()
-        case _:
-            print("Input Error")
-        
-"""
 if __name__ == "__main__":
     main()
 

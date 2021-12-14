@@ -55,15 +55,15 @@ def simpson_method() -> None:
             ans = round(float(equation.solve_for('x', x)), rv)
             if i == 0 or i == 2 * n:
                 y0 += ans
-                table.add_row([i, x, ans, ' ', ' '])
+                table.add_row([i, round(float(x), rv), round(float(ans), rv), ' ', ' '])
 
             if i % 2 != 0 and i != 0 and i != 2 * n:
                 y1 += ans
-                table.add_row([i, x, ' ', ans, ' '])
+                table.add_row([i, round(float(x), rv), ' ', round(float(ans), rv), ' '])
 
             if i % 2 == 0 and i != 2 * n and i > 0:
                 y2 += ans
-                table.add_row([i, x, ' ', ' ', ans])
+                table.add_row([i, round(float(x), rv), ' ', ' ', round(float(ans), rv)])
             x += h
 
         table.add_row(['--', '----', '----', '----', '----'])

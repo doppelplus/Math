@@ -1,8 +1,9 @@
 import cmath
+import MathTools
 
 
 def pole_calculator() -> None:
-
+    print("Pole Calculator")
 
     for k in range(5):
         print(f'for K = {k} : {complex(-2 + cmath.sqrt(4 - 2 * k))}')

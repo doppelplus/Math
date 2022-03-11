@@ -8,8 +8,8 @@ class Equation:
     def __init__(self, equation):
         self.ALLOWED_NAMES = {k: v for k, v in math.__dict__.items() if not k.startswith("__")}
         self.ALLOWED_NAMES.update({'x': 'x'})
-        self.ALLOWED_NAMES.update({'x': 'y'})
-        self.ALLOWED_NAMES.update({'x': 'z'})
+        self.ALLOWED_NAMES.update({'y': 'y'})
+        self.ALLOWED_NAMES.update({'z': 'z'})
         self.x = sp.symbols('x')
         self.y = sp.symbols('y')
         self.z = sp.symbols('z')
@@ -454,6 +454,13 @@ def newton_interpolation() -> None:
     print("\n")
 
 
+def runge_kutta() -> None:
+    f = Equation(input("Type f in python syntax:\t"))
+    print(f)
+    # h = int(input("Type value for h:\t"))
+
+    # f_iteration = Equation(f'y + {h} * {f.x = }')
+
 def print_menu() -> None:
     print("\n"
           "0 Trapeze Method\n"
@@ -466,6 +473,7 @@ def print_menu() -> None:
           "7 Gauss-Seidel Method\n"
           "8 Lagrange interpolation\n"
           "9 Newton interpolation\n"
+          "a Runge Kutta\n"
           "Press 'c' to close")
 
 
@@ -496,6 +504,8 @@ def main() -> None:
                 lagrange_interpolation()
             case '9':
                 newton_interpolation()
+            case 'A':
+                runge_kutta()
             case _:
                 print("Input Error")
 
